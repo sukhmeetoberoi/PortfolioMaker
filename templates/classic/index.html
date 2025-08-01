@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ personal.name or github.profile.name or 'Portfolio' }}</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">
+                    <h1>{{ personal.name or github.profile.name or 'Portfolio' }}</h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#portfolio">Portfolio</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    {% if github.profile.avatar_url %}
+                    <img src="{{ github.profile.avatar_url }}" alt="Profile" class="hero-image">
+                    {% endif %}
+                    <h1 class="hero-title">{{ personal.name or github.profile.name or 'John Doe' }}</h1>
+                    <p class="hero-subtitle">{{ personal.title or linkedin.profile.headline or 'Professional Developer' }}</p>
+                    <p class="hero-description">{{ personal.bio or github.profile.bio or 'Creating elegant solutions to complex problems.' }}</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about">
+            <div class="container">
+                <h2 class="section-title">About Me</h2>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p>{{ personal.about or 'I am a dedicated professional with a passion for creating high-quality solutions. My experience spans multiple technologies and I take pride in delivering exceptional results.' }}</p>
+                        
+                        <div class="skills">
+                            <h3>Technical Skills</h3>
+                            <ul class="skills-list">
+                                {% for skill in personal.skills or ['JavaScript', 'Python', 'React', 'Node.js', 'HTML/CSS', 'Git'] %}
+                                <li>{{ skill }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="about-stats">
+                        {% if github.profile %}
+                        <div class="stat-item">
+                            <span class="stat-number">{{ github.profile.public_repos }}</span>
+                            <span class="stat-label">Projects</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">{{ github.profile.followers }}</span>
+                            <span class="stat-label">Followers</span>
+                        </div>
+                        {% endif %}
+                        <div class="stat-item">
+                            <span class="stat-number">{{ personal.experience_years or '3+' }}</span>
+                            <span class="stat-label">Years Experience</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Section -->
+        <section id="portfolio" class="portfolio">
+            <div class="container">
+                <h2 class="section-title">My Portfolio</h2>
+                <div class="portfolio-grid">
+                    {% for repo in github.repositories[:6] %}
+                    <div class="portfolio-item">
+                        <div class="portfolio-content">
+                            <h3>{{ repo.name }}</h3>
+                            <p>{{ repo.description }}</p>
+                            <div class="portfolio-meta">
+                                {% if repo.language %}
+                                <span class="language">{{ repo.language }}</span>
+                                {% endif %}
+                                <div class="stats">
+                                    <span><i class="fas fa-star"></i> {{ repo.stars }}</span>
+                                    <span><i class="fas fa-code-branch"></i> {{ repo.forks }}</span>
+                                </div>
+                            </div>
+                            <a href="{{ repo.html_url }}" target="_blank" class="portfolio-link">View Project</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2 class="section-title">Get In Touch</h2>
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>{{ personal.email or 'contact@example.com' }}</span>
+                        </div>
+                        {% if personal.phone %}
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>{{ personal.phone }}</span>
+                        </div>
+                        {% endif %}
+                        {% if github.profile.location or personal.location %}
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>{{ personal.location or github.profile.location }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="social-links">
+                        {% if github.profile.html_url %}
+                        <a href="{{ github.profile.html_url }}" target="_blank"><i class="fab fa-github"></i></a>
+                        {% endif %}
+                        {% if linkedin.profile.profile_url %}
+                        <a href="{{ linkedin.profile.profile_url }}" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        {% endif %}
+                        {% if personal.twitter %}
+                        <a href="{{ personal.twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; {{ generated_at[:4] }} {{ personal.name or github.profile.name or 'Portfolio' }}. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

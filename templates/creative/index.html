@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ personal.name or github.profile.name or 'Creative Portfolio' }}</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h2>{{ personal.name or github.profile.name or 'Creative' }}</h2>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#work">Work</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="nav-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <div class="floating-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+                <div class="shape shape-4"></div>
+            </div>
+        </div>
+        
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="greeting">Hello, I'm</span>
+                    <span class="name">{{ personal.name or github.profile.name or 'Creative Artist' }}</span>
+                </h1>
+                <p class="hero-subtitle">{{ personal.title or linkedin.profile.headline or 'Creative Professional' }}</p>
+                <p class="hero-description">{{ personal.bio or github.profile.bio or 'Bringing ideas to life through creativity and innovation.' }}</p>
+                
+                <div class="hero-buttons">
+                    <a href="#work" class="btn btn-primary">
+                        <i class="fas fa-rocket"></i>
+                        View My Work
+                    </a>
+                    <a href="#contact" class="btn btn-outline">
+                        <i class="fas fa-envelope"></i>
+                        Let's Talk
+                    </a>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                {% if github.profile.avatar_url %}
+                <div class="profile-container">
+                    <img src="{{ github.profile.avatar_url }}" alt="Profile" class="profile-image">
+                    <div class="profile-glow"></div>
+                </div>
+                {% else %}
+                <div class="profile-placeholder">
+                    <i class="fas fa-palette"></i>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">About Me</h2>
+                <div class="title-decoration"></div>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-text">
+                    <p class="about-description">
+                        {{ personal.about or 'I am a passionate creative professional who loves to explore new ideas and push boundaries. My work combines technical skills with artistic vision to create unique and impactful experiences.' }}
+                    </p>
+                    
+                    <div class="stats-grid">
+                        {% if github.profile %}
+                        <div class="stat-card">
+                            <div class="stat-number">{{ github.profile.public_repos }}</div>
+                            <div class="stat-label">Projects</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">{{ github.profile.followers }}</div>
+                            <div class="stat-label">Followers</div>
+                        </div>
+                        {% endif %}
+                        <div class="stat-card">
+                            <div class="stat-number">{{ personal.experience_years or '5+' }}</div>
+                            <div class="stat-label">Years</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skills-section">
+                    <h3 class="skills-title">My Toolkit</h3>
+                    <div class="skills-cloud">
+                        {% for skill in personal.skills or ['Design', 'Development', 'Photography', 'Illustration', 'Animation', 'Branding'] %}
+                        <span class="skill-bubble">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Work Section -->
+    <section id="work" class="work">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">My Work</h2>
+                <div class="title-decoration"></div>
+            </div>
+            
+            <div class="work-grid">
+                {% for repo in github.repositories[:6] %}
+                <div class="work-card">
+                    <div class="work-image">
+                        <div class="work-overlay">
+                            <div class="work-links">
+                                <a href="{{ repo.html_url }}" target="_blank" class="work-link">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="work-info">
+                        <h3 class="work-title">{{ repo.name }}</h3>
+                        <p class="work-description">{{ repo.description }}</p>
+                        <div class="work-meta">
+                            {% if repo.language %}
+                            <span class="work-tech">{{ repo.language }}</span>
+                            {% endif %}
+                            <div class="work-stats">
+                                <span><i class="fas fa-star"></i> {{ repo.stars }}</span>
+                                <span><i class="fas fa-code-branch"></i> {{ repo.forks }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                {% if not github.repositories %}
+                <div class="work-card">
+                    <div class="work-image sample-work">
+                        <div class="work-overlay">
+                            <div class="work-links">
+                                <a href="#" class="work-link">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="work-info">
+                        <h3 class="work-title">Creative Project</h3>
+                        <p class="work-description">A showcase of creative work and innovative solutions.</p>
+                        <div class="work-meta">
+                            <span class="work-tech">Creative</span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Let's Create Together</h2>
+                <div class="title-decoration"></div>
+            </div>
+            
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p>{{ personal.email or 'hello@creative.com' }}</p>
+                        </div>
+                    </div>
+                    
+                    {% if personal.phone %}
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Phone</h4>
+                            <p>{{ personal.phone }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if github.profile.location or personal.location %}
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Location</h4>
+                            <p>{{ personal.location or github.profile.location }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="social-section">
+                    <h3>Find Me Online</h3>
+                    <div class="social-links">
+                        {% if github.profile.html_url %}
+                        <a href="{{ github.profile.html_url }}" target="_blank" class="social-link github">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        {% endif %}
+                        {% if linkedin.profile.profile_url %}
+                        <a href="{{ linkedin.profile.profile_url }}" target="_blank" class="social-link linkedin">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        {% endif %}
+                        {% if personal.twitter %}
+                        <a href="{{ personal.twitter }}" target="_blank" class="social-link twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        {% endif %}
+                        {% if github.profile.blog %}
+                        <a href="{{ github.profile.blog }}" target="_blank" class="social-link website">
+                            <i class="fas fa-globe"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; {{ generated_at[:4] }} {{ personal.name or github.profile.name or 'Creative Portfolio' }}. Made with <i class="fas fa-heart"></i></p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
