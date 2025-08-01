@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ personal.name or github.profile.name or 'Portfolio' }}</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>{{ personal.name or github.profile.name or 'Portfolio' }}</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        Hi, I'm <span class="highlight">{{ personal.name or github.profile.name or 'John Doe' }}</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        {{ personal.title or linkedin.profile.headline or 'Full Stack Developer' }}
+                    </p>
+                    <p class="hero-description">
+                        {{ personal.bio or github.profile.bio or linkedin.profile.summary or 'Passionate developer creating amazing digital experiences.' }}
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#projects" class="btn btn-primary">View My Work</a>
+                        <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    {% if github.profile.avatar_url %}
+                    <img src="{{ github.profile.avatar_url }}" alt="Profile Picture" class="profile-img">
+                    {% else %}
+                    <div class="profile-placeholder">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>{{ personal.about or 'I am a passionate developer with experience in creating web applications and solving complex problems through code.' }}</p>
+                    
+                    <div class="stats">
+                        {% if github.profile %}
+                        <div class="stat">
+                            <h3>{{ github.profile.public_repos }}</h3>
+                            <p>Projects</p>
+                        </div>
+                        <div class="stat">
+                            <h3>{{ github.profile.followers }}</h3>
+                            <p>Followers</p>
+                        </div>
+                        {% endif %}
+                        <div class="stat">
+                            <h3>{{ personal.experience_years or '2+' }}</h3>
+                            <p>Years Experience</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skills">
+                    <h3>Skills & Technologies</h3>
+                    <div class="skills-grid">
+                        {% for skill in personal.skills or ['JavaScript', 'Python', 'React', 'Node.js', 'HTML/CSS', 'Git'] %}
+                        <div class="skill-item">{{ skill }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="projects-grid">
+                {% for repo in github.repositories[:6] %}
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3>{{ repo.name }}</h3>
+                        <div class="project-links">
+                            <a href="{{ repo.html_url }}" target="_blank" class="project-link">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <p class="project-description">{{ repo.description }}</p>
+                    <div class="project-footer">
+                        {% if repo.language %}
+                        <span class="project-language">{{ repo.language }}</span>
+                        {% endif %}
+                        <div class="project-stats">
+                            <span><i class="fas fa-star"></i> {{ repo.stars }}</span>
+                            <span><i class="fas fa-code-branch"></i> {{ repo.forks }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                {% if not github.repositories %}
+                <!-- Sample projects if no GitHub data -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3>Project One</h3>
+                        <div class="project-links">
+                            <a href="#" class="project-link">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <p class="project-description">A sample project showcasing modern web development.</p>
+                    <div class="project-footer">
+                        <span class="project-language">JavaScript</span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>{{ personal.email or 'your.email@example.com' }}</span>
+                    </div>
+                    {% if personal.phone %}
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>{{ personal.phone }}</span>
+                    </div>
+                    {% endif %}
+                    {% if github.profile.location or personal.location %}
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{{ personal.location or github.profile.location }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="social-links">
+                    {% if github.profile.html_url %}
+                    <a href="{{ github.profile.html_url }}" target="_blank" class="social-link">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    {% endif %}
+                    {% if linkedin.profile.profile_url %}
+                    <a href="{{ linkedin.profile.profile_url }}" target="_blank" class="social-link">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    {% endif %}
+                    {% if personal.twitter %}
+                    <a href="{{ personal.twitter }}" target="_blank" class="social-link">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    {% endif %}
+                    {% if github.profile.blog %}
+                    <a href="{{ github.profile.blog }}" target="_blank" class="social-link">
+                        <i class="fas fa-globe"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; {{ generated_at[:4] }} {{ personal.name or github.profile.name or 'Portfolio' }}. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
